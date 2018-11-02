@@ -16,4 +16,7 @@
 
 REPLICA_INDEX=$1
 
+echo "java ${JAVA_OPTS} -cp bin/:lib/* bftsmart.demo.ycsb.YCSBServer $REPLICA_INDEX"
+
 java ${JAVA_OPTS} -cp bin/:lib/* bftsmart.demo.ycsb.YCSBServer $REPLICA_INDEX
+
