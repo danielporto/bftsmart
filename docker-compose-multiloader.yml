@@ -1,0 +1,49 @@
+version: '3'
+services:
+    r0:
+        image: bftsmart
+        restart: always
+        command: sh -c 'sleep 1 && sh runscripts/startReplicaYCSB.sh 0'
+        
+
+    r1:
+        image: bftsmart
+        restart: always
+        command: sh -c 'sleep 5 && sh runscripts/startReplicaYCSB.sh 1'
+
+
+    r2:
+        image: bftsmart
+        restart: always
+        command: sh -c 'sleep 7 && sh runscripts/startReplicaYCSB.sh 2'
+        
+        
+    r3:
+        image: bftsmart
+        restart: always
+        command: sh -c 'sleep 9 && sh runscripts/startReplicaYCSB.sh 3'
+    
+
+
+    loader1:
+        image: bftsmart
+        command: sh -c 'sleep 11 && sh runscripts/ycsbLoader.sh'
+        environment:
+        - RECORDCOUNT=10000
+        - CLIENTID=1000
+        - INSERTSTART=0 
+        - INSERTCOUNT=5000
+
+    loader2:
+        image: bftsmart
+        command: sh -c 'sleep 11 && sh runscripts/ycsbLoader.sh'
+        environment:
+        - RECORDCOUNT=10000
+        - CLIENTID=2000
+        - INSERTSTART=5000 
+        - INSERTCOUNT=5000
+
+    client:
+        image: bftsmart
+        command: sh -c 'sleep 300 && sh runscripts/ycsbClient.sh'
+   
