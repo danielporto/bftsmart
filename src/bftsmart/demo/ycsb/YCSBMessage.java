@@ -138,6 +138,7 @@ public class YCSBMessage implements Serializable {
             aBais.close();
             return aMessage;
         } catch (ClassNotFoundException | IOException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
