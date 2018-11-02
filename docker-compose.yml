@@ -2,6 +2,7 @@ version: '3'
 services:
     r0:
         image: bftsmart
+        build: .
         restart: always
         command: sh -c 'sleep 1 && sh runscripts/startReplicaYCSB.sh 0'
         
