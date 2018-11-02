@@ -28,8 +28,6 @@ services:
         command: sh -c 'sleep 15 && sh runscripts/startReplicaYCSB.sh 3'
         environment:
         - JAVA_OPTS=-XX:+UseG1GC
-    
-
 
     loader1:
         image: bftsmart
@@ -50,10 +48,20 @@ services:
         - INSERTSTART=5000 
         - INSERTCOUNT=5000
 
-    # client:
-    #     image: bftsmart
-    #     command: sh -c 'sleep 300 && sh runscripts/ycsbClient.sh'
-    #     environment:
-    #     - THREADS=1
-    #     - JAVA_OPTS="-XX:+UseG1GC"
-        
+    client1:
+        image: bftsmart
+        command: sh -c 'sleep 120 && sh runscripts/ycsbClientEnv.sh'
+        environment:
+        - THREADS=1
+        - JAVA_OPTS=-XX:+UseG1GC
+        - RECORDCOUNT=10000
+        - CLIENTID=1000
+
+    client1:
+        image: bftsmart
+        command: sh -c 'sleep 120 && sh runscripts/ycsbClientEnv.sh'
+        environment:
+        - THREADS=1
+        - JAVA_OPTS=-XX:+UseG1GC
+        - RECORDCOUNT=10000
+        - CLIENTID=2000
