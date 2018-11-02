@@ -2,48 +2,58 @@ version: '3'
 services:
     r0:
         image: bftsmart
+        build: .
         restart: always
         command: sh -c 'sleep 1 && sh runscripts/startReplicaYCSB.sh 0'
-        
+        environment:
+        - JAVA_OPTS="-Xms2G -XX:+UseG1GC"
 
     r1:
         image: bftsmart
         restart: always
         command: sh -c 'sleep 5 && sh runscripts/startReplicaYCSB.sh 1'
-
+        environment:
+        - JAVA_OPTS="-XX:+UseG1GC"
 
     r2:
         image: bftsmart
         restart: always
         command: sh -c 'sleep 7 && sh runscripts/startReplicaYCSB.sh 2'
-        
+        environment:
+        - JAVA_OPTS="-XX:+UseG1GC"
         
     r3:
         image: bftsmart
         restart: always
         command: sh -c 'sleep 9 && sh runscripts/startReplicaYCSB.sh 3'
+        environment:
+        - JAVA_OPTS="-XX:+UseG1GC"
     
 
 
     loader1:
         image: bftsmart
-        command: sh -c 'sleep 11 && sh runscripts/ycsbLoader.sh'
+        command: sh -c 'sleep 11 && sh runscripts/ycsbLoaderEnv.sh'
         environment:
         - RECORDCOUNT=10000
         - CLIENTID=1000
         - INSERTSTART=0 
         - INSERTCOUNT=5000
 
+
     loader2:
         image: bftsmart
-        command: sh -c 'sleep 11 && sh runscripts/ycsbLoader.sh'
+        command: sh -c 'sleep 11 && sh runscripts/ycsbLoaderEnv.sh'
         environment:
         - RECORDCOUNT=10000
         - CLIENTID=2000
         - INSERTSTART=5000 
         - INSERTCOUNT=5000
 
-    client:
-        image: bftsmart
-        command: sh -c 'sleep 300 && sh runscripts/ycsbClient.sh'
-   
+    # client:
+    #     image: bftsmart
+    #     command: sh -c 'sleep 300 && sh runscripts/ycsbClient.sh'
+    #     environment:
+    #     - THREADS=1
+    #     - JAVA_OPTS="-XX:+UseG1GC"
+        

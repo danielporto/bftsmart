@@ -12,8 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#/bin/bash
-
-REPLICA_INDEX=$1
-
-java ${JAVA_OPTS} -cp bin/:lib/* bftsmart.demo.ycsb.YCSBServer $REPLICA_INDEX
+java  ${JAVA_OPTS} -cp ./lib/*:./bin/ com.yahoo.ycsb.Client -threads ${THREADS} -P config/workloads/workloada -p measurementtype=timeseries -p timeseries.granularity=1000 -db bftsmart.demo.ycsb.YCSBClient -s 
