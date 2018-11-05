@@ -1,0 +1,44 @@
+- hosts: all
+  become: no
+  any_errors_fatal: true
+  vars_files:
+      - vars-smart.yml
+
+  roles:
+    - role: comcast.sdkman
+      sdkman_dir: "{{ sdkman_folder }}"
+      sdkman_auto_answer: true
+      sdkman_update: true
+      sdkman_install_packages:
+        - { candidate: java, version: "{{ java_version }}" }  #file a new bug. fail when java cannot be installed.
+        - { candidate: ant, version: "{{ ant_version }}" }
+      sdkman_flush_caches_before:
+        - temp
+      sdkman_flush_caches_after:
+        - archives
+        - broadcast
+        - candidates
+        - temp
+  
+  post_tasks:
+
+    - name: Ensure link to default sdkman folder at the home dir exists
+      file:
+        src: "{{ sdkman_folder }}"
+        dest: ~/.sdkman
+        state: link
+
+    - name: Ensure presence of profile
+      file: state=touch path=~/.profile
+
+    - name: Add sdkman in .profile
+      lineinfile: 
+        path: ~/.profile 
+        regexp: '\[\[ \-s \"{{sdkman_folder}}\/.*'
+        line: '[[ -s "{{sdkman_folder}}/bin/sdkman-init.sh" && ! $(which sdkman-init.sh) ]] && source "{{sdkman_folder}}/bin/sdkman-init.sh"'
+
+    - name: Add sdkman in .bashrc
+      lineinfile: 
+        path: ~/.bashrc
+        regexp: '\[\[ \-s \"{{sdkman_folder}}\/.*'
+        line: '[[ -s "{{sdkman_folder}}/bin/sdkman-init.sh" && ! $(which sdkman-init.sh) ]] && source "{{sdkman_folder}}/bin/sdkman-init.sh"'

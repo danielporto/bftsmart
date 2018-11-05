@@ -1,0 +1,66 @@
+---
+
+
+
+root_install_dir: /home/dporto/kaioken
+bftsmart_install_dir: "{{root_install_dir}}/bftsmart"
+
+sdkman_folder: "{{ root_install_dir }}/sdkman"
+java_version: '8.0.181-zulu'
+ant_version: '1.10.1'
+
+#---------------------------------------------------------------------------
+# Experiment control
+#---------------------------------------------------------------------------
+experiment_duration: 600
+warmup_duration: 30
+
+result_tree_root: "{{ default_install_dir }}/data"
+base_result_dir: "{{ result_tree_root }}/{{experiment_type}}/centos7/{{ experiment }}"
+
+#---------------------------------------------------------------------------
+# Variables for YCSB deployment
+#------------------------------------------------------------------------------
+# Smart variables
+system_servers_timeout: "5000" # "2000"
+system_servers_num: "4"
+system_servers_f: "1"
+system_totalordermulticast_maxbatchsize: "400"
+system_communication_useSignatures: "0"
+system_communication_useMACs: "1"
+system_debug: "0"
+system_totalordermulticast_log: "True"
+system_totalordermulticast_log_parallel: "False"
+system_totalordermulticast_log_to_disk: "False"
+system_totalordermulticast_sync_log: "False"
+system_totalordermulticast_checkpoint_to_disk: "False"
+system_totalordermulticast_sync_ckp: "False"
+system_totalordermulticast_checkpoint_period: "1000"
+system_totalordermulticast_global_checkpoint_period: "120000"
+system_initial_view: "0,1,2,3"
+system_bft: "True"
+#------------------------------------------------------------------------------
+#- name: Set default parameters for workload file
+readallfields: "true"
+readproportion: "0.5"
+updateproportion: "0.5"
+scanproportion: "0"
+insertproportion: "0"
+operationcount: "0"
+maxexecutiontime: "maxexecutiontime={{experiment_duration}}"
+# base client id is defined below
+smart_key: 1000
+# recordcount: "500000"  # starts using swap for the 7GB server
+recordcount: "50000"
+insertstart: ""
+insertcount: ""
+
+#------------------------------------------------------------------------------
+# - name: Set runtime parameters 
+java_opts: "-Xms5G -XX:+UseG1GC"
+# java with remote profilling
+#java_opts: "-Xms5G -XX:+UseG1GC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8849 -Dcom.sun.management.jmxremote.rmi.port=8850 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false "
+
+# number of clients per host must be smaller than smart_key
+clients_per_host: "8"
+

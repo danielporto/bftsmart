@@ -1,3 +1,5 @@
 bin/BFT-SMaRt.jar
 .idea*
-config/currentView
+config/*.iml
+*.iml
+inventory.cfg

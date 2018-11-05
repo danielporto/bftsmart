@@ -1,0 +1,25 @@
+
+---
+- name: BFTSmart deployment management
+  hosts: all
+  gather_facts: False
+  become: yes
+  any_errors_fatal: true
+  vars_files: 
+    - vars-smart.yml
+
+  vars_prompt:
+    - name: "destroy"
+      prompt: "Are you sure you want to destroy the deployment? write: 'destroy the world.'"
+      private: no
+
+
+  tasks:
+    - name: RAGNAROCK! - Wipe all deployment files
+      file: 
+        path:  "{{ item }}" # destroy all
+        state: absent
+      with_items:
+      - "{{ bftsmart_install_dir}}"
+      when: destroy  == "destroy the world."
+

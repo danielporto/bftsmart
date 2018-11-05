@@ -87,6 +87,35 @@ If you need to generate public/private keys for more replicas or clients, you ca
 
 Keys are stored in the 'config/keys' folder. The command above creates key pairs both for clients and replicas. Alternatively, you can set the 'system.communication.defaultkeys' to 'true' in the 'config/system.config' file to forces all processes to use the same public/private keys pair and secret key. This is useful when deploying experiments and benchmarks, because it enables the programmer to avoid generating keys for all principals involved in the system. However, this must not be used in a real deployment.
 
+
+
+----- Run bftsmart in containers ------
+Single loader
+$ docker-compose up
+
+Multiloader/multiclients
+$ docker-compose -f docker-compose-multiloader.yml up --build
+
+----- Deploy the current source code to remote machines using ansible ------
+
+Requirements:
+    * 5 machines (4 servers and 1 client)
+    * username and ssh keys to remote nodes
+    * remote nodes should have python (latest) installed.
+
+Install the ansible galaxy role to allow managing JDK at the remote nodes:
+$ ansible-galaxy install comcast.sdkman
+
+Copy the content of the inventory_template.cfg to inventory.cfg and update its content.
+$ cp inventory_template.cfg inventory.cfg
+
+Deploy using the playbooks
+$ ansible-playbook playbook/deploy-jdk.yml
+$ ansible-playbook playbook/deploy-bftsmart.yml
+
+Cleanup:
+$ ansible-playbook playbook/wipe-deployment
+
 ----- Additional information and publications ------
 
 Finally, if you are interested in learning more about BFT-SMaRt, you can read:

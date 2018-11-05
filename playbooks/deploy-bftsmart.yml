@@ -1,0 +1,59 @@
+
+---
+# the init playbook creates the environment folders
+
+- name: BFTSmart cluster deployment
+  hosts: all
+  gather_facts: False
+  become: no
+  any_errors_fatal: true
+  vars_files: 
+    - vars-smart.yml
+
+  tasks:
+    - name: Create environment folder
+      file: 
+        path: "{{ item }}"
+        state: directory
+        mode: "g+rw"
+      with_items:
+        - "{{ root_install_dir }}"
+        - "{{ bftsmart_install_dir }}"      
+
+    - name: deploy current source code to remote machines
+      synchronize:
+        src: "../../"
+        dest: "{{ bftsmart_install_dir }}/"
+        use_ssh_args: yes
+
+
+    - name: Remove old compilation and jar
+      file: 
+        path: "{{ item }}"
+        state: absent    
+      with_items:
+          - '{{ bftsmart_install_dir }}/bin/bftsmart'
+          - '{{ bftsmart_install_dir }}/bin/BFT-SMaRt.jar'
+
+
+    - name: Build a new Jar
+      shell: 
+        tmux -f {{ bftsmart_install_dir }}/templates/tmux.conf new-session -d -s build "bash -lc 'ant'"
+      args:
+        chdir: '{{ bftsmart_install_dir }}'
+        executable: /bin/bash
+
+    - name: Wait while ant compiles the new jar
+      pause:
+        seconds: 15
+
+    - name: Ensure the presence of a new jar
+      file: 
+        path: '{{ bftsmart_install_dir }}/bin/BFT-SMaRt.jar'
+        state: file    
+
+
+    - name: remove old state
+      file: 
+        path: '{{ bftsmart_install_dir }}/config/currentView' 
+        state: absent

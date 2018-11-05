@@ -1,0 +1,39 @@
+---
+
+  - name: YCSB deployment
+    include_vars: vars-smart.yml
+
+  # configure client options
+  - name: Override maximum execution time for servers (change in workloada)
+    set_fact:
+      # override variable
+      maxexecutiontime: ""
+
+  - name: Update hosts configuration 
+    template:
+      src: templates/ycsbbft/hosts.config.j2
+      dest: "{{bftsmart_install_dir}}/config/hosts.config"
+      
+  - name: Update the parameters of system configuration file
+    template:
+      src: templates/ycsbbft/system.config.j2
+      dest: "{{bftsmart_install_dir}}/config/system.config"
+      
+  - name: Update workload files configuration file
+    template:
+      src: templates/ycsbbft/workloada.j2
+      dest: "{{bftsmart_install_dir}}/config/workloads/workloada"
+
+  - name: Update server execution scripts
+    template:
+      src: templates/ycsbbft/startReplicaYCSB.sh.j2
+      dest: "{{bftsmart_install_dir}}/runscripts/startReplicaYCSB.sh"
+
+  - name: Update client execution scripts
+    template:
+      src: templates/ycsbbft/ycsbClient.sh.j2
+      dest: "{{bftsmart_install_dir}}/runscripts/ycsbClient.sh"
+
+  - name: remove old state
+    file: path="{{bftsmart_install_dir}}/config/currentView" state=absent
+        
